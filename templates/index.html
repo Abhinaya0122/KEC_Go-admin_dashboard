@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <nav>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/dashboard/all">Orders</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/settings">Settings</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="summary">
+            <h2>Dashboard Overview</h2>
+            <div class="stats">
+                <div class="stat">
+                    <h3>Total Orders</h3>
+                    <p>{{ total_orders }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Total Users</h3>
+                    <p>{{ total_users }}</p>
+                </div>
+                <div class="stat">
+                    <h3>Total Revenue</h3>
+                    <p>${{ total_revenue }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-orders">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Created At</th>
+                        <th>Total Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                        <tr>
+                            <td>{{ order['order_id'] }}</td>
+                            <td>{{ order['createdAt'] }}</td>
+                            <td>${{ order['totalAmount'] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+
+        <!-- New Section for Adding and Deleting Products -->
+        <section class="product-management">
+            <h2>Manage Products</h2>
+
+            <!-- Add Product Form -->
+            <div class="add-product">
+                <h3>Add Product</h3>
+                <form action="/add_product" method="POST">
+                    <label for="productName">Product Name:</label>
+                    <input type="text" id="productName" name="name" required>
+
+                    <label for="productPrice">Price:</label>
+                    <input type="number" id="productPrice" name="price" step="0.01" required>
+
+                    <label for="productQuantity">Quantity:</label>
+                    <input type="number" id="productQuantity" name="quantity" required>
+
+                    <label for="productDescription">Description:</label>
+                    <textarea id="productDescription" name="description" required></textarea>
+
+                    <label for="productImageUrl">Image URL:</label>
+                    <input type="url" id="productImageUrl" name="imageurl" required>
+
+                    <button type="submit">Add Product</button>
+                </form>
+            </div>
+
+            <!-- Product List with Delete Option -->
+            <div class="product-list">
+                <h3>Existing Products</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Product ID</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Image</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for product in products %}
+                            <tr>
+                                <td>{{ product['product_id'] }}</td>
+                                <td>{{ product['name'] }}</td>
+                                <td>{{ product['description'] }}</td>
+                                <td>${{ product['price'] }}</td>
+                                <td>{{ product['quantity'] }}</td>
+                                <td><img src="{{ product['imageUrl'] }}" alt="{{ product['name'] }}" width="50"></td>
+                                <td>
+                                    <form action="/delete_product" method="POST" style="display:inline;">
+                                        <input type="hidden" name="product_id" value="{{ product['product_id'] }}">
+                                        <button type="submit" class="delete-button">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; {{ year }} KECGo! Admin Dashboard</p>
+    </footer>
+</body>
+</html>
