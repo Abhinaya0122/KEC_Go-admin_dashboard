@@ -3,7 +3,7 @@ from firebase_admin import credentials, firestore
 
 def initialize_firebase():
     # Provide the path to your Firebase service account key file
-    cred = credentials.Certificate("")
+    cred = credentials.Certificate("") #add your credentials
     
     # Initialize Firebase app
     firebase_admin.initialize_app(cred)
